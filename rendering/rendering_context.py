@@ -6,7 +6,6 @@ from typing import Tuple
 import glfw
 import numpy as np
 from OpenGL.GL import *
-from PIL import Image
 
 from .color import Color
 from .game_objects import GameObject
@@ -145,44 +144,6 @@ class RenderingContext:
             self.render_frame()
 
         glfw.terminate()
-
-    def render_texture(self, width=None, height=None, resolution=1.0):
-        glBindFramebuffer(GL_FRAMEBUFFER, self.fb)
-
-        if width is None:
-            width = self.width
-
-        if height is None:
-            height = self.height
-
-        width = round(width * resolution)
-        height = round(height * resolution)
-
-        texture = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, texture)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, None)
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0)
-        glDrawBuffers(1, [GL_COLOR_ATTACHMENT0])
-
-        # Render
-        glBindFramebuffer(GL_FRAMEBUFFER, self.fb)
-        glViewport(0, 0, width, height)
-
-        glClear(GL_COLOR_BUFFER_BIT)
-        self._main_scene.render(self._projection_matrix)
-
-        glPixelStorei(GL_PACK_ALIGNMENT, 1)
-        data = glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE)
-        image = Image.frombytes("RGB", (width, height), data).transpose(Image.FLIP_TOP_BOTTOM)
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0)
-        glViewport(0, 0, self.width, self.height)
-
-        return image
 
     def is_key_pressed(self, key):
         return key in self.keys_down
