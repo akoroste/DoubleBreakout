@@ -55,9 +55,7 @@ class RenderingContext:
         self._projection_matrix = np.array([[1, 0, 0], [0, self.aspect, 0], [0, 0, 1]], dtype=np.float32)
 
         def resize_callback(window, width, height):
-            self.aspect = width / height
-            glViewport(0, 0, width, height)
-            self._projection_matrix = np.array([[1, 0, 0], [0, self.aspect, 0], [0, 0, 1]], dtype=np.float32)
+            self.resize(width, height)
 
         glfw.set_framebuffer_size_callback(self.window, resize_callback)
 

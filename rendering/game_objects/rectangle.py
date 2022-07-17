@@ -32,14 +32,33 @@ class Rectangle(GameObject):
         else:
             raise TypeError("Rectangle requires either size or width and height to be specified")
 
+        self.base_width = hw * 2
+        self.base_height = hh * 2
+
         positions = np.array([
-            [-hw, -hh],
-            [-hw, hh],
-            [hw, hh],
-            [hw, -hh],
+                [-hw, -hh],
+                [-hw, hh],
+                [hw, hh],
+                [hw, -hh],
         ], dtype=np.float32)
 
         indices = np.array([[0, 2, 1], [0, 3, 2]], dtype=np.uintc)
 
         renderable = Renderable(positions, indices, color, Shader.unlit)
         super().__init__(position, scale, rotation, parent, renderable)
+
+    @property
+    def width(self):
+        return self.base_width * self.transform.local_scale.x
+
+    @width.setter
+    def width(self, value):
+        self.transform.local_scale.x = value / self.base_width
+
+    @property
+    def height(self):
+        return self.base_height * self.transform.local_scale.y
+
+    @height.setter
+    def height(self, value):
+        self.transform.local_scale.y = value / self.base_height

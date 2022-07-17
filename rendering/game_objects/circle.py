@@ -7,21 +7,30 @@ from ..renderables import CircleRenderable
 
 
 class Circle(GameObject):
-    def __init__(self, color: Color,
-                 radius: float = 0.5,
+    def __init__(self, diameter: float,
+                 color: Color,
                  position: Optional[Point] = None,
                  rotation: float = 0.0,
                  parent: Optional[GameObject] = None):
         if position is None:
             position = Point.zero
-        scale = 2 * radius * Point.one
+
+        scale = diameter * Point.one
         circle = CircleRenderable(color, 0.5)
         super().__init__(position, scale, rotation, parent, circle)
 
     @property
-    def radius(self):
+    def width(self):
         return self.transform.local_scale.x
 
-    @radius.setter
-    def radius(self, value):
-        self.transform.local_scale.set(value)
+    @width.setter
+    def width(self, value):
+        self.transform.local_scale.x = value
+
+    @property
+    def height(self):
+        return self.transform.local_scale.y
+
+    @height.setter
+    def height(self, value):
+        self.transform.local_scale.y = value
