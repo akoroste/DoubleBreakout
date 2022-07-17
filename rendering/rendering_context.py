@@ -80,7 +80,10 @@ class RenderingContext:
         self.terminate()
 
     def terminate(self):
-        glfw.terminate()
+        try:
+            glfw.terminate()
+        except TypeError:
+            pass
 
         RenderingContext.__static_instance = None
 

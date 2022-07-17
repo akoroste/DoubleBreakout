@@ -14,8 +14,8 @@ class Renderable:
         self._update_attributes()
 
         # Vertices
-        self._vertex_buffer = glGenBuffers(1)
-        glBindBuffer(GL_ARRAY_BUFFER, self._vertex_buffer)
+        self._positions_buffer = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, self._positions_buffer)
         glBufferData(GL_ARRAY_BUFFER, 4 * positions.size, positions, GL_STATIC_DRAW)
 
         # Indices
@@ -35,12 +35,12 @@ class Renderable:
         self._shader = value
         self._update_attributes()
 
-    def render(self, transform_matrix):
+    def render(self, transform_matrix: np.ndarray):
         self._shader.use()
 
         # Set positions
         glEnableVertexAttribArray(self._position_location)
-        glBindBuffer(GL_ARRAY_BUFFER, self._vertex_buffer)
+        glBindBuffer(GL_ARRAY_BUFFER, self._positions_buffer)
         glVertexAttribPointer(self._position_location, 2, GL_FLOAT, GL_FALSE, 0, None)
 
         # Set color

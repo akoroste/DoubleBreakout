@@ -21,9 +21,9 @@ class Triangle(GameObject):
             scale = Point.one
 
         positions = np.array([
-            [p1.x, p1.y],
-            [p2.x, p2.y],
-            [p3.x, p3.y],
+                [p1.x, p1.y],
+                [p2.x, p2.y],
+                [p3.x, p3.y],
         ], dtype=np.float32)
 
         indices = np.array([0, 1, 2], dtype=np.uintc)

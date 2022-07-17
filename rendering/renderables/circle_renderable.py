@@ -9,10 +9,10 @@ from ..shaders import Shader
 class CircleRenderable(Renderable):
     def __init__(self, color: Color, radius: float = 0.5):
         positions = np.array([
-            [-radius, -radius],
-            [-radius, radius],
-            [radius, radius],
-            [radius, -radius],
+                [-radius, -radius],
+                [-radius, radius],
+                [radius, radius],
+                [radius, -radius],
         ], dtype=np.float32)
 
         indices = np.array([[0, 2, 1], [0, 3, 2]], dtype=np.uintc)
@@ -33,12 +33,12 @@ class CircleRenderable(Renderable):
 
         self.radius = radius
 
-    def render(self, transform_matrix):
+    def render(self, transform_matrix: np.ndarray):
         self._shader.use()
 
         # Set positions
         glEnableVertexAttribArray(self._position_location)
-        glBindBuffer(GL_ARRAY_BUFFER, self._vertex_buffer)
+        glBindBuffer(GL_ARRAY_BUFFER, self._positions_buffer)
         glVertexAttribPointer(self._position_location, 2, GL_FLOAT, GL_FALSE, 0, None)
 
         # Set UV

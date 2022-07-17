@@ -17,11 +17,6 @@ class Rectangle(GameObject):
                  scale: Optional[Point] = None,
                  rotation: float = 0.0,
                  parent: Optional[GameObject] = None):
-        if position is None:
-            position = Point.zero
-        if scale is None:
-            scale = Point.one
-
         hw = width_or_size * 0.5
         if isinstance(height, Color):
             color = height
