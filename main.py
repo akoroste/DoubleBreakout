@@ -48,5 +48,5 @@ if __name__ == '__main__':
         # Finally, render the frame to the screen.
         ctx.render_frame()
 
-        # Sleep for 1/60th of a second.
+        # Sleep for 5/60 of a second.
         time.sleep(5 / 60)
