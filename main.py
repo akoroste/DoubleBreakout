@@ -1,3 +1,4 @@
+
 import time
 from random import randrange
 
@@ -17,6 +18,8 @@ if __name__ == '__main__':
     # and the top right corner will have coordinates: [x = ctx.width / 2, y = ctx.height / 2].
     pixel_scene = GameObject(parent=ctx.main_scene)
 
+    pad = Rectangle(100, 55, Color(1, 1, 0))
+
     # Create a blue rectangle and an orange circle.
     #square = Rectangle(50, Color(0.2, 0.3, 0.7))  # 50x50 pixels
     #circle = Circle(50, Color(0.7, 0.3, 0.2))  # 50 pixels diameter
@@ -24,6 +27,7 @@ if __name__ == '__main__':
 
     # Add objects to the pixel scene.
     #pixel_scene.add_child(square, circle, text)
+    pixel_scene.add_child(pad)
 
     # Enter the main loop. Repeat it until the escape key is pressed.
     while not ctx.is_key_held(glfw.KEY_ESCAPE):
@@ -33,6 +37,9 @@ if __name__ == '__main__':
         # This makes the rectangle stick to the bottom left corner of the screen (with a 10 pixel margin)
         #square.x = -ctx.width / 2 + square.width / 2 + 10
         #square.y = -ctx.height / 2 + square.height / 2 + 10
+
+        pad.y = -ctx.height / 2 + pad.height / 2 + 10
+        pad.x = ctx.width * 0.1 / 4
 
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
         #circle.x = ctx.width / 2 - circle.width / 2 - 10
