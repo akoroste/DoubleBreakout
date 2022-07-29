@@ -19,11 +19,12 @@ if __name__ == '__main__':
     pixel_scene = GameObject(parent=ctx.main_scene)
 
     pad = Rectangle(100, 55, Color(1, 1, 0))
-
     # Create a blue rectangle and an orange circle.
     #square = Rectangle(50, Color(0.2, 0.3, 0.7))  # 50x50 pixels
     #circle = Circle(50, Color(0.7, 0.3, 0.2))  # 50 pixels diameter
     #text = Text("#" * 10, color=Color(0.1, 0.5, 0.2))
+
+    direction = "none"
 
     # Add objects to the pixel scene.
     #pixel_scene.add_child(square, circle, text)
@@ -37,9 +38,38 @@ if __name__ == '__main__':
         # This makes the rectangle stick to the bottom left corner of the screen (with a 10 pixel margin)
         #square.x = -ctx.width / 2 + square.width / 2 + 10
         #square.y = -ctx.height / 2 + square.height / 2 + 10
-
+        maxX = ctx.width / 2 - pad.width / 2 - 10
+        minX = -ctx.width / 2 + pad.width / 2 + 10
         pad.y = -ctx.height / 2 + pad.height / 2 + 10
-        pad.x = ctx.width * 0.1 / 4
+        pad.width = ctx.width * 0.1
+
+
+        if ctx.is_key_pressed(glfw.KEY_RIGHT):
+           if direction == "right":
+               direction = "none"
+           else:
+               direction = "right"
+
+
+
+
+        if ctx.is_key_pressed(glfw.KEY_LEFT):
+            if direction == "left":
+                direction = "none"
+            else:
+                direction = "left"
+
+
+        if direction == "right":
+            pad.x += 0.1
+            if pad.x > maxX:
+                pad.x = maxX
+        else:
+            if direction == "left":
+                pad.x -= 0.1  # pad.x = pad.x - 1
+                if pad.x < minX:
+                    pad.x = minX
+
 
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
         #circle.x = ctx.width / 2 - circle.width / 2 - 10
@@ -56,5 +86,5 @@ if __name__ == '__main__':
         ctx.render_frame()
 
         # Sleep for 5/60 of a second.
-        time.sleep(5 / 60)
- 
+        #time.sleep(1 / 60)
+
