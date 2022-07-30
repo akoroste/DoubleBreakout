@@ -3,8 +3,10 @@ import time
 from random import randrange
 
 import glfw
+import random
 
 from rendering import Circle, Color, GameObject, Rectangle, RenderingContext, Text
+from math import cos, sin, pi
 
 if __name__ == '__main__':
     # Create a 800x600 pixel window.
@@ -21,14 +23,24 @@ if __name__ == '__main__':
     pad = Rectangle(100, 55, Color(1, 1, 0))
     # Create a blue rectangle and an orange circle.
     #square = Rectangle(50, Color(0.2, 0.3, 0.7))  # 50x50 pixels
-    #circle = Circle(50, Color(0.7, 0.3, 0.2))  # 50 pixels diameter
-    #text = Text("#" * 10, color=Color(0.1, 0.5, 0.2))
+    # text = Text("#" * 10, color=Color(0.1, 0.5, 0.2))
+
+    circle = Circle(50, Color(0.7, 0.3, 0.2))  # 50 pixels diameter
+    circle.x = pad.x
+    circle.y = -ctx.height / 2 + pad.height + circle.height / 2 + 10
+    angle = random.random() * 90 - 45
+    angle = angle * pi / 2 / 90
+    print("angle =", angle)
+
+    speed = 0.5
+    speed_x = sin(angle) * speed
+    speed_y = cos(angle) * speed
 
     direction = "none"
 
     # Add objects to the pixel scene.
     #pixel_scene.add_child(square, circle, text)
-    pixel_scene.add_child(pad)
+    pixel_scene.add_child(pad, circle)
 
     # Enter the main loop. Repeat it until the escape key is pressed.
     while not ctx.is_key_held(glfw.KEY_ESCAPE):
@@ -43,6 +55,10 @@ if __name__ == '__main__':
         pad.y = -ctx.height / 2 + pad.height / 2 + 10
         pad.width = ctx.width * 0.1
 
+
+
+        circle.x = circle.x + speed_x
+        circle.y = circle.y + speed_y
 
         if ctx.is_key_pressed(glfw.KEY_RIGHT):
            if direction == "right":
