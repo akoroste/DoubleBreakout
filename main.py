@@ -86,6 +86,13 @@ if __name__ == '__main__':
                 if pad.x < minX:
                     pad.x = minX
 
+        if circle.x >= ctx.width / 2 - circle.width / 2 or circle.x <= -ctx.width / 2 + circle.width / 2:
+            speed_y = speed_y
+            speed_x = -speed_x
+
+        if circle.y >= ctx.height / 2 - circle.height / 2 or circle.y <= -ctx.height / 2 + circle.height / 2:
+            speed_y = -speed_y
+            speed_x = speed_x
 
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
         #circle.x = ctx.width / 2 - circle.width / 2 - 10
