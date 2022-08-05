@@ -6,7 +6,17 @@ import glfw
 import random
 
 from rendering import Circle, Color, GameObject, Rectangle, RenderingContext, Text
-from math import cos, sin, pi
+from math import cos, sin, pi, sqrt
+
+
+def norm(vector):
+    x = vector[0]
+    y = vector[1]
+    l = sqrt(x ** 2 + y ** 2)
+    return l
+
+
+
 
 if __name__ == '__main__':
     # Create a 800x600 pixel window.
@@ -53,20 +63,13 @@ if __name__ == '__main__':
         maxX = ctx.width / 2 - pad.width / 2 - 10
         minX = -ctx.width / 2 + pad.width / 2 + 10
         pad.y = -ctx.height / 2 + pad.height / 2 + 10
-        pad.width = ctx.width * 0.1
-
-
-
-        circle.x = circle.x + speed_x
-        circle.y = circle.y + speed_y
+        pad.width = ctx.width * 0.2
 
         if ctx.is_key_pressed(glfw.KEY_RIGHT):
            if direction == "right":
                direction = "none"
            else:
                direction = "right"
-
-
 
 
         if ctx.is_key_pressed(glfw.KEY_LEFT):
@@ -86,13 +89,54 @@ if __name__ == '__main__':
                 if pad.x < minX:
                     pad.x = minX
 
+        circle.x = circle.x + speed_x
+        circle.y = circle.y + speed_y
+
         if circle.x >= ctx.width / 2 - circle.width / 2 or circle.x <= -ctx.width / 2 + circle.width / 2:
-            speed_y = speed_y
+            #speed_y = speed_y
             speed_x = -speed_x
 
         if circle.y >= ctx.height / 2 - circle.height / 2 or circle.y <= -ctx.height / 2 + circle.height / 2:
             speed_y = -speed_y
-            speed_x = speed_x
+            #speed_x = speed_x
+
+        x_right = pad.x + pad.width / 2
+        x_left = pad.x - pad.width / 2
+        y_top = pad.y + pad.height / 2
+        y_bottom = pad.y - pad.height / 2
+
+        P1 = [x_left, y_top]
+        P2 = [x_right, y_top]
+        P3 = [x_left, y_bottom]
+        P4 = [x_right, y_bottom]
+
+        collision = False
+
+        for point in [P1, P2, P3, P4]:
+            x = point[0]
+            y = point[1]
+
+            L_x = x - circle.x
+            L_y = y - circle.y
+            L = [L_x, L_y]
+
+            length = norm(L)
+
+            radius = circle.width / 2
+
+            if length <= radius:
+                collision = True
+                break
+
+        if collision:
+            pc = [circle.x - pad.x, circle.y - pad.y]
+            pc_length = norm(pc)
+            pc_norm = [1 / pc_length * pc[0], 1 / pc_length * pc[1]]
+            s = [pc_norm[0] * speed, pc_norm[1] * speed]
+            speed_x = s[0]
+            speed_y = s[1]
+
+
 
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
         #circle.x = ctx.width / 2 - circle.width / 2 - 10
@@ -110,4 +154,3 @@ if __name__ == '__main__':
 
         # Sleep for 5/60 of a second.
         #time.sleep(1 / 60)
-
