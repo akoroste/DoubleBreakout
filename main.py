@@ -1,18 +1,12 @@
-import time
-from random import randrange
+# import time
 
 import glfw
 import random
 
-from rendering import Circle, Color, GameObject, Rectangle, RenderingContext, Text
-from math import cos, sin, pi, sqrt
-
-
-def norm(vector):
-    x = vector[0]
-    y = vector[1]
-    l = sqrt(x ** 2 + y ** 2)
-    return l
+from check_collision import check_collision
+from norm import norm
+from rendering import Circle, Color, GameObject, Rectangle, RenderingContext
+from math import cos, sin, pi
 
 
 if __name__ == '__main__':
@@ -96,48 +90,7 @@ if __name__ == '__main__':
             speed_y = -speed_y
             # speed_x = speed_x
 
-        collision = False
-
-        x_right = pad.x + pad.width / 2
-        x_left = pad.x - pad.width / 2
-        y_top = pad.y + pad.height / 2
-        y_bottom = pad.y - pad.height / 2
-
-        P1 = [x_left, y_top]
-        P2 = [x_right, y_top]
-        P3 = [x_left, y_bottom]
-        P4 = [x_right, y_bottom]
-
-        for point in [P1, P2, P3, P4]:
-            x = point[0]
-            y = point[1]
-
-            L_x = x - circle.x
-            L_y = y - circle.y
-            L = [L_x, L_y]
-
-            length = norm(L)
-
-            radius = circle.width / 2
-
-            if length <= radius:
-                collision = True
-                break
-
-        if not collision:
-            x_collision = pad.x - pad.width / 2 < circle.x < pad.x + pad.width / 2
-            y_collision = abs(circle.y - pad.y) - pad.height / 2 <= radius
-
-            if x_collision and y_collision:
-                collision = True
-
-        if not collision:
-            x_collision = abs(circle.x - pad.x) - pad.width / 2 <= radius
-            y_collision = pad.y - pad.height / 2 < circle.y < pad.y + pad.height / 2
-
-            if x_collision and y_collision:
-                collision = True
-
+        collision = check_collision(circle, pad)
         if collision:
             pc = [circle.x - pad.x, circle.y - pad.y]
             pc_length = norm(pc)
