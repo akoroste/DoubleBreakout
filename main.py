@@ -1,4 +1,3 @@
-
 import time
 from random import randrange
 
@@ -16,8 +15,6 @@ def norm(vector):
     return l
 
 
-
-
 if __name__ == '__main__':
     # Create a 800x600 pixel window.
     ctx = RenderingContext(800, 600)
@@ -32,7 +29,7 @@ if __name__ == '__main__':
 
     pad = Rectangle(100, 55, Color(1, 1, 0))
     # Create a blue rectangle and an orange circle.
-    #square = Rectangle(50, Color(0.2, 0.3, 0.7))  # 50x50 pixels
+    # square = Rectangle(50, Color(0.2, 0.3, 0.7))  # 50x50 pixels
     # text = Text("#" * 10, color=Color(0.1, 0.5, 0.2))
 
     circle = Circle(50, Color(0.7, 0.3, 0.2))  # 50 pixels diameter
@@ -42,14 +39,15 @@ if __name__ == '__main__':
     angle = angle * pi / 2 / 90
     print("angle =", angle)
 
-    speed = 0.5
-    speed_x = sin(angle) * speed
-    speed_y = cos(angle) * speed
+    speed_circle = 0.5
+    speed_pad = 0.5
+    speed_x = sin(angle) * speed_circle
+    speed_y = cos(angle) * speed_circle
 
     direction = "none"
 
     # Add objects to the pixel scene.
-    #pixel_scene.add_child(square, circle, text)
+    # pixel_scene.add_child(square, circle, text)
     pixel_scene.add_child(pad, circle)
 
     # Enter the main loop. Repeat it until the escape key is pressed.
@@ -58,19 +56,18 @@ if __name__ == '__main__':
         pixel_scene.transform.local_scale.set(2 / max(ctx.height, ctx.width) / min(1, ctx.width / ctx.height))
 
         # This makes the rectangle stick to the bottom left corner of the screen (with a 10 pixel margin)
-        #square.x = -ctx.width / 2 + square.width / 2 + 10
-        #square.y = -ctx.height / 2 + square.height / 2 + 10
+        # square.x = -ctx.width / 2 + square.width / 2 + 10
+        # square.y = -ctx.height / 2 + square.height / 2 + 10
         maxX = ctx.width / 2 - pad.width / 2 - 10
         minX = -ctx.width / 2 + pad.width / 2 + 10
         pad.y = -ctx.height / 2 + pad.height / 2 + 10
         pad.width = ctx.width * 0.2
 
         if ctx.is_key_pressed(glfw.KEY_RIGHT):
-           if direction == "right":
-               direction = "none"
-           else:
-               direction = "right"
-
+            if direction == "right":
+                direction = "none"
+            else:
+                direction = "right"
 
         if ctx.is_key_pressed(glfw.KEY_LEFT):
             if direction == "left":
@@ -78,14 +75,13 @@ if __name__ == '__main__':
             else:
                 direction = "left"
 
-
         if direction == "right":
-            pad.x += 0.1
+            pad.x += speed_pad
             if pad.x > maxX:
                 pad.x = maxX
         else:
             if direction == "left":
-                pad.x -= 0.1  # pad.x = pad.x - 1
+                pad.x -= speed_pad  # pad.x = pad.x - 1
                 if pad.x < minX:
                     pad.x = minX
 
@@ -93,12 +89,14 @@ if __name__ == '__main__':
         circle.y = circle.y + speed_y
 
         if circle.x >= ctx.width / 2 - circle.width / 2 or circle.x <= -ctx.width / 2 + circle.width / 2:
-            #speed_y = speed_y
+            # speed_y = speed_y
             speed_x = -speed_x
 
         if circle.y >= ctx.height / 2 - circle.height / 2 or circle.y <= -ctx.height / 2 + circle.height / 2:
             speed_y = -speed_y
-            #speed_x = speed_x
+            # speed_x = speed_x
+
+        collision = False
 
         x_right = pad.x + pad.width / 2
         x_left = pad.x - pad.width / 2
@@ -109,8 +107,6 @@ if __name__ == '__main__':
         P2 = [x_right, y_top]
         P3 = [x_left, y_bottom]
         P4 = [x_right, y_bottom]
-
-        collision = False
 
         for point in [P1, P2, P3, P4]:
             x = point[0]
@@ -128,29 +124,41 @@ if __name__ == '__main__':
                 collision = True
                 break
 
+        if not collision:
+            x_collision = pad.x - pad.width / 2 < circle.x < pad.x + pad.width / 2
+            y_collision = abs(circle.y - pad.y) - pad.height / 2 <= radius
+
+            if x_collision and y_collision:
+                collision = True
+
+        if not collision:
+            x_collision = abs(circle.x - pad.x) - pad.width / 2 <= radius
+            y_collision = pad.y - pad.height / 2 < circle.y < pad.y + pad.height / 2
+
+            if x_collision and y_collision:
+                collision = True
+
         if collision:
             pc = [circle.x - pad.x, circle.y - pad.y]
             pc_length = norm(pc)
             pc_norm = [1 / pc_length * pc[0], 1 / pc_length * pc[1]]
-            s = [pc_norm[0] * speed, pc_norm[1] * speed]
+            s = [pc_norm[0] * speed_circle, pc_norm[1] * speed_circle]
             speed_x = s[0]
             speed_y = s[1]
 
-
-
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
-        #circle.x = ctx.width / 2 - circle.width / 2 - 10
-        #circle.y = -ctx.height / 2 + circle.height / 2 + 10
+        # circle.x = ctx.width / 2 - circle.width / 2 - 10
+        # circle.y = -ctx.height / 2 + circle.height / 2 + 10
 
         # Generate random characters for the text
-        #text.text = [chr(randrange(33, 127)) for _ in range(10)]
+        # text.text = [chr(randrange(33, 127)) for _ in range(10)]
 
         # Position text at the bottom middle of the screen
-        #text.x = max(-text.width / 2, -ctx.width / 2 + 10)
-        #text.y = -ctx.height / 2 + 15
+        # text.x = max(-text.width / 2, -ctx.width / 2 + 10)
+        # text.y = -ctx.height / 2 + 15
 
         # Finally, render the frame to the screen.
         ctx.render_frame()
 
         # Sleep for 5/60 of a second.
-        #time.sleep(1 / 60)
+        # time.sleep(1 / 60)
