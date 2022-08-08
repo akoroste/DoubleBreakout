@@ -40,9 +40,13 @@ if __name__ == '__main__':
 
     direction = "none"
 
+    blocks = [Rectangle(60, 40, Color(0, 0.7, 0)) for _ in range(10)]
+    blocks_1 = [Rectangle(60, 40, Color(0.2, 0.1, 0.5)) for _ in range(9)]
+    margin = 10
+
     # Add objects to the pixel scene.
     # pixel_scene.add_child(square, circle, text)
-    pixel_scene.add_child(pad, circle)
+    pixel_scene.add_child(pad, circle, *blocks, *blocks_1)
 
     # Enter the main loop. Repeat it until the escape key is pressed.
     while not ctx.is_key_held(glfw.KEY_ESCAPE):
@@ -98,6 +102,18 @@ if __name__ == '__main__':
             s = [pc_norm[0] * speed_circle, pc_norm[1] * speed_circle]
             speed_x = s[0]
             speed_y = s[1]
+
+        for i in range(len(blocks)):
+            block = blocks[i]
+            block.y = ctx.height / 2 - block.height / 2 - margin
+            block.width = ctx.width * 0.05
+            block.x = (i - 4 - 1 / 2) * (block.width + margin)
+
+        for i in range(len(blocks_1)):
+            block = blocks_1[i]
+            block.y = ctx.height / 2 - 3 / 2 * block.height - 2 * margin
+            block.width = ctx.width * 0.05
+            block.x = (i - 4) * (block.width + margin)
 
         # This makes the circle stick to the bottom right corner of the screen (with a 10 pixel margin)
         # circle.x = ctx.width / 2 - circle.width / 2 - 10
